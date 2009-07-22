@@ -1,0 +1,31 @@
+#!/usr/bin/make -f
+
+clean:
+	dh_testdir
+	dh_testroot
+	dh_clean
+
+build:
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_prep
+
+	mkdir -p $(CURDIR)/debian/mtd-support/lib/mdev
+	cp mtd_id mtdblock_id $(CURDIR)/debian/mtd-support/lib/mdev
+	mkdir -p $(CURDIR)/debian/mtd-support/etc/mdev.conf.d
+	cp 91mtd-support $(CURDIR)/debian/mtd-support/etc/mdev.conf.d
+
+binary-indep: install
+	dh_testdir
+	dh_testroot
+	dh_fixperms
+	dh_installdeb
+	dh_gencontrol
+	dh_builddeb
+
+binary-arch:
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install

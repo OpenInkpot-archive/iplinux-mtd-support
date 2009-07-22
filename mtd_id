@@ -1,0 +1,12 @@
+#!/bin/sh
+set -e
+
+[ -e /proc/mtd ] || exit 1
+
+NAME=$(awk "/$MDEV:/ { print \$4 }" /proc/mtd | cut -d\" -f2)
+
+if [ -z "$ACTION" ] || [ "x$ACTION" = xadd ]; then
+  ln -sf /dev/$MDEV /dev/mtd_$NAME
+else
+  rm -f /dev/mtd_$NAME
+fi 
